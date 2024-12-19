@@ -67,8 +67,4 @@ def delete_proxy():
     return null
 
 def update_proxy():
-    return null 
-
-def main():
-    if __name__ == '__main__':
-        print("nothing for now")
+    return null
