@@ -39,7 +39,6 @@ def verify_token():
 
 #create dns record in cloudflare
 def create_dns_record(zone_id):
-    
     headers = {"X-Auth-Email": "CLOUDFLARE_EMAIL",
     "X-Auth-Key": "CLOUDFLARE_API_KEY",
     "comment": "Domain verification record",
@@ -55,12 +54,10 @@ def create_dns_record(zone_id):
 
 #Function to integrate with nginx proxy manager
 def nginx_proxy_manager():
-    
     return null 
 
 
 def create_proxy():
-    
     return null
 
 def delete_proxy():

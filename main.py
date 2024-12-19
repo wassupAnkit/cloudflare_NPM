@@ -1,5 +1,4 @@
 import os
-from cloudflare import Cloudflare
 import requests
 
 # from cloudflare import Cloudflare
@@ -12,11 +11,11 @@ import requests
 # #ask if they just want to add it in Cloudflare
 # just_cloudflare = input("Do you just want to add subdomain in cloudlfare?")
 
-if just_cloudflare == True:
-    default
-    #just run the program
-else:
-    default = 2
+# if just_cloudflare == True:
+#     default
+#     #just run the program
+# else:
+    # default = 2s
     #nginx_proxy_manager()
     #else call the function that also implements the given subdomain to the nginx proxy manager
 
@@ -25,17 +24,20 @@ else:
 #ask email and api token
 
 
-def verify_token():
+def verify_token(auth_token):
     try:
         headers = {
         'Authorization': 'Bearer auth_token',
         'Content-Type': 'application/json'
         } 
-        url = response.get("https://api.cloudflare.com/client/v4/user/tokens/verify", headers=headers)
-        
+        url = requests.get("https://api.cloudflare.com/client/v4/user/tokens/verify", headers=headers)
+        print(url.status_code)
+        if url.status_code == 200:
+            return 0
+        else:
+            return 1
     except:
         print("Your token is invalid, recheck your token")
-    return 
 
 #create dns record in cloudflare
 def create_dns_record(zone_id):
@@ -70,5 +72,12 @@ def update_proxy():
     return null 
 
 def main():
-    if __name__ == '__main__':
-        print("nothing for now")
+    email = os.environ.get(CLOUDFLARE_EMAIL)#input("Enter your cloudflare email")
+    api_token = os.environ.get(CLOUDFLARE_API_TOKEN)
+    if verify_token(api_token) == 1:
+        print(1)
+    else:
+        print('messed up!')
+
+if __name__ == '__main__':
+    main()
