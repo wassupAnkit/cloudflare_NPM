@@ -1,4 +1,5 @@
 import os
+
 import requests
 
 # from cloudflare import Cloudflare
@@ -20,8 +21,7 @@ import requests
     #else call the function that also implements the given subdomain to the nginx proxy manager
 
 
-##############################################################################################################################################
-#ask email and api token
+#################################################################################################################################################################
 
 
 def verify_token(auth_token):
@@ -40,19 +40,30 @@ def verify_token(auth_token):
         print("Your token is invalid, recheck your token")
 
 #create dns record in cloudflare
-def create_dns_record(zone_id):
-    
-    headers = {"X-Auth-Email": "CLOUDFLARE_EMAIL",
-    "X-Auth-Key": "CLOUDFLARE_API_KEY",
-    "comment": "Domain verification record",
-      "content": "198.51.100.4",
-      "name": "example.com",
-      "proxied": true,
-      "ttl": 3600,
-      "type": "A"
+def create_dns_record(zone_id, email, api_token):
+    ask_content = input("Enter the public ip") 
+    ask_domain = input ("Enter the complete_domain, Eg: google.com")
+    proxy = input("Do you want to proxy this domain? \n Y/n")
+    if proxy == "Y" or "y" or "":
+        proxy = True
+    else:
+        proxy == False
+    comment_dns = input("Enter the comment if you want to add any")
+    record_type = input("What kind of record do you want to enter? Example.... A, AAA, MX")
+    try:
+        headers = {"X-Auth-Email": email,
+        "X-Auth-Key": api_token,
+        "comment": comment_dns,
+        "content": ask_content,
+        "name": ask_domain,
+        "proxied": lower(proxy),
+        "ttl": 3600,
+        "type": record_type
     }
-    url = "https://api.cloudflare.com/client/v4/zones/zone_id/dns_records"
-    return null
+        url = requests.post("https://api.cloudflare.com/client/v4/zones/zone_id/dns_records", headers=headers)
+        return print("mission passed")
+    except:
+        return print("mission failed!",  headerss)
 
 
 #Function to integrate with nginx proxy manager
@@ -62,7 +73,6 @@ def nginx_proxy_manager():
 
 
 def create_proxy():
-    
     return null
 
 def delete_proxy():
@@ -71,13 +81,21 @@ def delete_proxy():
 def update_proxy():
     return null 
 
+
 def main():
-    email = os.environ.get(CLOUDFLARE_EMAIL)#input("Enter your cloudflare email")
-    api_token = os.environ.get(CLOUDFLARE_API_TOKEN)
+    email = os.environ.get('CLOUDFLARE_EMAIL')#input("Enter your cloudflare email")
+    api_token = os.environ.get('CLOUDFLARE_API_TOKEN')
+    zone_id = input("Enter your zone id, different for each domains")
     if verify_token(api_token) == 1:
-        print(1)
+        ask = input("do you want to create a new dns record now?")
+        if ask == "Y" or "y" or "":
+            create_dns_record(zone_id, email,api_token)
+        else:
+            print("don't create then get out")
     else:
-        print('messed up!')
+        print('messed up!, but guess what Global API tokens cannot be validated.')
+        create_dns_record(zone_id, email,api_token)
+    
 
 if __name__ == '__main__':
     main()
